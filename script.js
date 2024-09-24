@@ -1,5 +1,5 @@
 
-let score = [0 , 0];       //Global score
+let score = [0, 0];       //Global score
 let roundScore = 0;     //round score
 let current = 0;        //current player  (0 or 1)
 let dice;
@@ -13,26 +13,26 @@ document.querySelector(".current-1").textContent = "0";
 
 
 
-document.getElementById("rotate").onclick = function(){
-    //roll the dice
-    dice = Math.floor(Math.random()*6 + 1);
-    
- if(gameRunning){    
-     //get value of dice
-    document.querySelector("#dice-img").src = "assets/dice-"+dice+".JPG";
-    
+document.getElementById("rotate").onclick = function () {
+  //roll the dice
+  dice = Math.floor(Math.random() * 6 + 1);
+
+  if (gameRunning) {
+    //get value of dice
+    document.querySelector("#dice-img").src = "assets/dice-" + dice + ".JPG";
+
     //This is just for cool effects
-    if(animation === 0){
+    if (animation === 0) {
       document.querySelector("#dice-img").classList.add("tada");
       document.querySelector("#dice-img").classList.remove('shake');
-      animation = 1;      
+      animation = 1;
     }
-    
-    else{
-        document.querySelector("#dice-img").classList.remove('tada');
-        document.querySelector("#dice-img").classList.add('shake');
-        animation = 0;
-        
+
+    else {
+      document.querySelector("#dice-img").classList.remove('tada');
+      document.querySelector("#dice-img").classList.add('shake');
+      animation = 0;
+
     }
 
     //YOUR CODE HERE
@@ -45,15 +45,22 @@ document.getElementById("rotate").onclick = function(){
     //hint: toggle seems cool, don't you think? Only applies if user lost turn
     //hint # 2: Current user is either 0 or 1
 
-    document.querySelector(".player-0").classList.toggle("active");
-    document.querySelector(".player-1").classList.toggle("active");
-    document.querySelector(".current-"+current).textContent = dice;
-    current = 1 - current;
- }
+    if (dice !== 1) {
+      roundScore += dice;
+      document.querySelector(".current-" + current).textContent = roundScore;
+    } else {
+      roundScore = 0;
+      document.querySelector(".current-" + current).textContent = "0";
+      document.querySelector(".player-0").classList.toggle("active");
+      document.querySelector(".player-1").classList.toggle("active");
+      current = 1 - current;
+    }
+
+  }
 }
 
 
-document.getElementById("hold").onclick = function(){
+document.getElementById("hold").onclick = function () {
 
   //Your code here
 
@@ -61,25 +68,47 @@ document.getElementById("hold").onclick = function(){
   //this value should be visible in his score
   //current user wins if his/her/their score is equal or more than 100. Afther this, game should be stopped
 
- }
+  if (gameRunning) {
+    // Add current round score to the global score of the current player
+    score[current] += roundScore;
+    document.querySelector(".score-" + current).textContent = score[current];
 
+    // Check if it was a winner
+    if (score[current] >= 100) {
+      document.querySelector("#pl-" + current).innerHTML = "<h2>PLAYER " + (current + 1) + " WINS!</h2>";
+      gameRunning = false;
+    } else {
+      // Reset round score and switch player
+      roundScore = 0;
+      document.querySelector(".current-" + current).textContent = "0";
+      document.querySelector(".player-0").classList.toggle("active");
+      document.querySelector(".player-1").classList.toggle("active");
+      current = 1 - current;
+    }
+  }
 
-document.querySelector("#new").addEventListener('click',game);
-
-function game() {
-    
-    score = [0,0];
-    roundScore = 0 ;
-    current = 0;
-    gameRunning = true;
-    
-    document.querySelector(".score-0").textContent = "0";
-    document.querySelector(".score-1").textContent = "0";
-    document.querySelector(".current-0").textContent = "0";
-    document.querySelector(".current-1").textContent = "0";
-    document.querySelector("#pl-0").innerHTML = "<h2 id='pl-0'>PLAYER 1 "+"<i class='fas fa-cicle'>"+"</i></h2>";
-    document.querySelector("#pl-1").innerHTML = "<h2 id='pl-1'>PLAYER 2 "+"<i class='fas fa-cicle'>"+"</i></h2>";
 }
 
- 
+
+document.querySelector("#new").addEventListener('click', game);
+
+function game() {
+
+  score = [0, 0];
+  roundScore = 0;
+  current = 0;
+  gameRunning = true;
+
+  document.querySelector(".score-0").textContent = "0";
+  document.querySelector(".score-1").textContent = "0";
+  document.querySelector(".current-0").textContent = "0";
+  document.querySelector(".current-1").textContent = "0";
+  document.querySelector("#pl-0").innerHTML = "<h2 id='pl-0'>PLAYER 1 " + "<i class='fas fa-cicle'>" + "</i></h2>";
+  document.querySelector("#pl-1").innerHTML = "<h2 id='pl-1'>PLAYER 2 " + "<i class='fas fa-cicle'>" + "</i></h2>";
+
+  document.querySelector(".player-0").classList.add("active");
+  document.querySelector(".player-1").classList.remove("active"); 
+
+}
+
 
